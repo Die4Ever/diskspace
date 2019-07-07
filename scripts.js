@@ -262,10 +262,11 @@ function update(data) {
     BuildHTMLTree();
     BuildStats();
 
-    $('.loader').remove();
+    $('.loader').fadeOut('fast');
 }
 
 function Refresh() {
+    $('.loader').fadeIn('fast');
     $.ajax({
         url: config.route,
         dataType: "json",

@@ -12,9 +12,9 @@ currently using 700 for row backgrounds and 900 for darker row backgrounds
 
 /* CSS Loader */
 .loader {
-    margin: 100px auto;
-    width: 50px;
-    height: 40px;
+    margin: 1rem auto;
+    width: 90vw;
+    height: 5rem;
     text-align: center;
     font-size: 10px;
 }
@@ -22,7 +22,7 @@ currently using 700 for row backgrounds and 900 for darker row backgrounds
 .loader > div {
     background-color: rgba(255,255,255,.87);
     height: 100%;
-    width: 6px;
+    width: 1rem;
     display: inline-block;
 
     -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
