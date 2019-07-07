@@ -226,7 +226,7 @@ function FilterNodes(parent, filter) {
             nodes.push(n);
             total_size += n.size;
             count++;
-            concat += '"' + n.fullpath +'" ';
+            concat += n.fullpath.replace(/^([^\/]\/)/, '$1\'') + '\' ';
         }
     }
     return { nodes: nodes, total_size: total_size, count: count, concat: concat };
