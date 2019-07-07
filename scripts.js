@@ -102,7 +102,7 @@ function SizeToString(size) {
 
 function SizeToHTML(size, seperator=' ') {
     var percent = size / quota * 100;
-    round(percent, 1) + '%';
+    percent = round(percent, 1) + '%';
     return SizeToString(size) + seperator + '('+percent+')';
 }
 
@@ -110,6 +110,7 @@ function TimestampToHTML(age) {
     var minutes = 60;
     var hours = minutes * 60;
     var days = hours * 24;
+    if (age < 0) age = 0;
     if(age>=days) return round(age/days) + ' days';
     if(age>=hours) return round(age/hours) + ' hours';
     if(age>=minutes) return round(age/minutes) + ' minutes';
