@@ -83,6 +83,7 @@ function BuildFilesTree(parent, files) {
 }
 
 function round(value, decimalPlaces = 1) {
+    if (value >= 10 && decimalPlaces>0) decimalPlaces--;
     const multiplier = Math.pow(10, decimalPlaces);
     return Math.round(value * multiplier + Number.EPSILON) / multiplier;
 }
@@ -101,8 +102,7 @@ function SizeToString(size) {
 
 function SizeToHTML(size, seperator=' ') {
     var percent = size / quota * 100;
-    if(percent>=10) percent = round(percent, 0) + '%';
-    else percent = round(percent, 1) + '%';
+    round(percent, 1) + '%';
     return SizeToString(size) + seperator + '('+percent+')';
 }
 
