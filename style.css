@@ -147,3 +147,6 @@ body {
     padding: 1rem 0;
 }
 
+.colheaders > *[data-sort-attr] {
+    cursor: pointer;
+}

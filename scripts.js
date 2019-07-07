@@ -2,6 +2,9 @@
 var hddusage;
 var quota;
 var now;
+var sort_attr;
+var sort_asc;
+var sort_func=NumericSort;
 
 class Node {
     name;
@@ -62,15 +65,15 @@ function FindNode(parent, key) {
 }
 
 function BuildFilesTree(parent, files) {
-    for(var i=0; i<files.length; i++) {
+    for (var i = 0; i < files.length; i++) {
+        var f = files[i];
         try {
-            var f = files[i];
             var m = f.split('\t');
             var n = FindNode(parent, m[2]);
             n.size = parseInt(m[0]);
             n.modified = parseInt(m[1]);
             n.age = now - n.modified;
-        } catch(e) {}
+        } catch (e) { console.error(f, e); }
     }
 
     parent.SortChildren();
@@ -176,6 +179,52 @@ function NodeToHTML(node, depth) {
     return NodeHTML(classes, name_padding_left, node.name, node.fullpath, node.size, size_html, node.modified, modified_html, num_children, children);
 }
 
+function NumericSort(a, b) {
+    var val_a = $(a).attr(sort_attr);
+    var val_b = $(b).attr(sort_attr);
+    var res = val_a - val_b;
+
+    if (!sort_asc)
+        res *= -1;
+
+    if (res === 0)
+        res = $(a).text().localeCompare($(b).text()) *-1;
+
+    return res;
+}
+
+function StringSort(a, b) {
+    var val_a = $(a).attr(sort_attr);
+    var val_b = $(b).attr(sort_attr);
+    var res = val_a.localeCompare(val_b);
+
+    if (sort_asc)
+        res *= -1;
+
+    if (res === 0)
+        res = $(a).text().localeCompare($(b).text()) *-1;
+
+    return res;
+}
+
+function SortNodes(node_childrens) {
+    node_childrens.each(function () {
+        var parent = $(this);
+        var nodes = parent.find('> .node');
+        parent.append( nodes.sort(sort_func) );
+    });
+}
+
+function ChangeSorting() {
+    localStorage.setItem("sort_attr", sort_attr);
+    localStorage.setItem("sort_asc", sort_asc);
+    sort_func = NumericSort;
+    if (sort_attr === 'title') sort_func = StringSort;
+
+    var node_childrens = $('.disk-space-tree > .node .node-children:not([hidden])');
+    SortNodes(node_childrens);
+}
+
 function BuildHTMLTree() {
     $(".disk-space-tree").empty();
     $(".disk-space-tree").append( $('#colheaders-template').text() );
@@ -199,13 +248,24 @@ function BuildHTMLTree() {
 
     $('.node.folder').click(function(){
         var c = $(this).find('> .node-children');
-        if(c.attr('hidden')) c.attr('hidden', null);
+        if (c.attr('hidden')) {
+            c.attr('hidden', null);
+            SortNodes(c);
+        }
         else c.attr('hidden', '');
         return false;
     });
 
     $('.node.file').click(function(){
         return false;
+    });
+
+    $('.colheaders > *[data-sort-attr]').click(function () {
+        var attr = $(this).attr('data-sort-attr');
+        if (attr === sort_attr) sort_asc = !sort_asc;
+        else sort_asc = false;
+        sort_attr = attr;
+        ChangeSorting();
     });
 }
 
@@ -285,6 +345,18 @@ $(function () {
         console.error(e);
         alert('config not found! copy config.example.js to config.js');
     }
+
+    try {
+        sort_attr = localStorage.getItem('sort_attr');
+        sort_asc = localStorage.getItem('sort_asc');
+    } catch (e) {
+        console.error(e);
+    }
+    if (!sort_attr) {
+        sort_attr = 'title';
+        sort_asc = false;
+    }
+    ChangeSorting();
 
     Refresh();
 
