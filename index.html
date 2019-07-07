@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Diskspace</title>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="loader">
+            <div class="rect1"></div>
+            <div class="rect2"></div>
+            <div class="rect3"></div>
+            <div class="rect4"></div>
+            <div class="rect5"></div>
+        </div>
+
+        <div class="disk-space-tree container-fluid">
+        </div>
+
+        <div class="container-fluid footer">
+            <div class="stats col-12 raw"></div>
+            <div class="suggested-commands col-12 raw"></div>
+        </div>
+
+        <div class="floating-controls">
+            <button class="expand-all btn btn-secondary" title="Useful for ctrl+f searching">Expand All</button>
+            <button class="expand-most btn btn-secondary" title="Useful for ctrl+f searching">Expand Most</button>
+            <button class="collapse-all btn btn-secondary">Collapse All</button>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+                integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+                crossorigin="anonymous"></script>
+        <script src="config.js"></script>
+        <script src="scripts.js"></script>
+    </body>
+
+<script>
+function NodeHTML(classes, name_padding_left, name, fullpath, size, size_html, modified, modified_html, num_children, children) {
+    return '<div class="node row '+classes+'" data-size="'+size+'" data-modified="'+modified+'" id="'+fullpath+'" title="'+fullpath+'">'
+        //+ '<h4 class="node-name col-12 col-xl-8 font-weight-bold" title="'+fullpath+'" style="padding-left: '+name_padding_left+';">'+name+'</h4>'
+        + '<h4 class="node-name col-12 col-xl-8 font-weight-bold">'+name+'</h4>'
+        + '<span class="node-size col-3 col-xl-1 text-right">'+size_html+'</span>'
+        + '<span class="node-modified col-3 col-xl-1 text-right">'+modified_html+'</span>'
+        + '<span class="node-num-children col-3 col-xl-1 text-right">'+num_children+'</span>'
+        + '<span class="node-kebab col-3 col-xl-1 text-center">...</span>'
+        + '<div class="node-children col-12" hidden="hidden">'+children+'</div></div>';
+}
+</script>
+
+<script id="colheaders-template" type="text/html">
+<div class="row colheaders">
+	<h2 class="col-12 col-md-8 font-weight-bold" style="padding-left: 1.5rem;">Name</h2>
+	<span class="col-3 col-md-1 text-right">Size</span>
+	<span class="col-3 col-md-1 text-right">Modified</span>
+	<span class="col-3 col-md-1 text-right">Children</span>
+	<span class="col-3 col-md-1 text-center">...</span>
+</div>
+</script>
+
+</html>

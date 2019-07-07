@@ -1,0 +1,149 @@
+/*
+colors should probably be at least 200 points apart?
+https://material.io/design/color/the-color-system.html#tools-for-picking-colors
+currently using 700 for row backgrounds and 900 for darker row backgrounds
+*/
+
+.raw {
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.2rem;
+}
+
+/* CSS Loader */
+.loader {
+    margin: 100px auto;
+    width: 50px;
+    height: 40px;
+    text-align: center;
+    font-size: 10px;
+}
+
+.loader > div {
+    background-color: rgba(255,255,255,.87);
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+
+    -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+    animation: sk-stretchdelay 1.2s infinite ease-in-out;
+}
+
+.loader .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+}
+
+.loader .rect3 {
+    -webkit-animation-delay: -1s;
+    animation-delay: -1s;
+}
+
+.loader .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+}
+
+.loader .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
+}
+
+@-webkit-keyframes sk-stretchdelay {
+    0%,
+    40%,
+    100% {
+        -webkit-transform: scaleY(0.4);
+    }
+    20% {
+        -webkit-transform: scaleY(1);
+    }
+}
+
+@keyframes sk-stretchdelay {
+    0%,
+    40%,
+    100% {
+        transform: scaleY(0.4);
+        -webkit-transform: scaleY(0.4);
+    }
+    20% {
+        transform: scaleY(1);
+        -webkit-transform: scaleY(1);
+    }
+}
+
+body {
+    background: #212121;
+    color: rgba(255,255,255,.87);
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.disk-space-tree {
+    padding: 0;
+    word-break: break-word;
+}
+
+.disk-space-tree *{
+    vertical-align: middle!important;
+}
+
+.row.colheaders {
+    border-bottom: 1px solid rgba(255,255,255,.87);
+    word-break: keep-all;
+}
+
+.disk-space-tree .row {
+    margin:0;
+    padding:0;
+}
+
+.disk-space-tree .row > * {
+    /*padding-top:1.5rem;
+    padding-bottom:1.5rem;*/
+    padding: 0.25rem 1.25rem;
+    margin:auto;
+}
+
+.node-children {
+    margin:0 !important;
+    padding:0 !important;
+    /*border-bottom: 1px solid rgba(255,255,255,.87);*/
+    margin-left: 2rem !important;
+    padding-right: 2.5rem !important;
+    padding-bottom: 2rem !important;
+}
+
+.node.folder {
+    cursor: pointer;
+}
+
+.node.file {
+    cursor: initial;
+}
+
+.node.evendepth:nth-child(even) {
+    background: #455A64;
+}
+.node.evendepth:nth-child(odd) {
+    background: #263238;
+}
+
+.node.odddepth:nth-child(even) {
+    background: #5D4037;
+}
+.node.odddepth:nth-child(odd) {
+    background: #3E2723;
+}
+
+.floating-controls {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+}
+
+.footer > * {
+    padding: 1rem 0;
+}
+
