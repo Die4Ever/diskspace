@@ -349,6 +349,8 @@ $(function () {
     try {
         sort_attr = localStorage.getItem('sort_attr');
         sort_asc = localStorage.getItem('sort_asc');
+        if (sort_asc === 'true') sort_asc = true;
+        if (sort_asc === 'false') sort_asc = false;
     } catch (e) {
         console.error(e);
     }
