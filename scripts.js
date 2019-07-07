@@ -275,8 +275,10 @@ function update(data) {
 }
 
 $(function () {
-
-    if (!config) {
+    try {
+        console.log('using config', config);
+    } catch (e) {
+        console.error(e);
         alert('config not found! copy config.example.js to config.js');
     }
 
