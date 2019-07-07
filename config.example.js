@@ -1,6 +1,6 @@
 
 var config = {
-    route: 'diskspace.php',
+    route: 'diskspace.php', //alternatively you can use diskspace.py
     display_roots: ['/home/die4ever/'],
     homedir: '/home/die4ever/',
     suggested_commands: [
