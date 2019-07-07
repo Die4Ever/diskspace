@@ -45,7 +45,13 @@ class Node {
     }
 }
 
-var tree_root = new Node('/', 0, 0);
+var tree_root;
+try {
+    tree_root = new Node('/', 0, 0);
+} catch (e) {
+    console.error(e);
+    alert('error building tree root! you probably forgot to make the config');
+}
 
 function FindNode(parent, key) {
     var keys = key.split('/');
