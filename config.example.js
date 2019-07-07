@@ -2,7 +2,7 @@
 var config = {
     route: 'diskspace.php',
     display_roots: ['/home/die4ever/'],
-    homedir: '/home20/die4ever/',
+    homedir: '/home/die4ever/',
     suggested_commands: [
         { title: 'Suggested for deletion (45+ days)', command: 'rm -rf', filter: function (n) { return n.age >= 86400 * 45; }, folder: '/home/die4ever/' },
         { title: 'Suggested for deletion (40+ days)', command: 'rm -rf', filter: function (n) { return n.age >= 86400 * 40; }, folder: '/home/die4ever/' }
