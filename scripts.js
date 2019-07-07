@@ -46,12 +46,6 @@ class Node {
 }
 
 var tree_root;
-try {
-    tree_root = new Node('/', 0, 0);
-} catch (e) {
-    console.error(e);
-    alert('error building tree root! you probably forgot to make the config');
-}
 
 function FindNode(parent, key) {
     var keys = key.split('/');
@@ -252,6 +246,14 @@ function BuildStats() {
 }
 
 function update(data) {
+    try {
+        tree_root = new Node('/', 0, 0);
+    } catch (e) {
+        console.error(e);
+        alert('error building tree root! you probably forgot to make the config');
+        return;
+    }
+
     hddusage = parseInt(data.hddusage);
     quota = parseInt(data.quota);
     now = parseInt(data.now);
@@ -260,19 +262,19 @@ function update(data) {
     BuildHTMLTree();
     BuildStats();
 
-    $('.expand-all').click(function(){
-        $('.node.folder > .node-children[hidden]').attr('hidden', null);
-    });
-
-    $('.expand-most').click(function(){
-        $('.disk-space-tree > .node.folder > .node-children[hidden], .disk-space-tree > .node.folder > .node-children > .node.folder > .node-children').attr('hidden', null);
-    });
-
-    $('.collapse-all').click(function(){
-        $('.node-children:not([hidden])').attr('hidden', '');
-    });
-
     $('.loader').remove();
+}
+
+function Refresh() {
+    $.ajax({
+        url: config.route,
+        dataType: "json",
+        success: update,
+        error: function () {
+            alert("OH NO!");
+            console.log(arguments);
+        }
+    });
 }
 
 $(function () {
@@ -283,15 +285,27 @@ $(function () {
         alert('config not found! copy config.example.js to config.js');
     }
 
-    $.ajax({
-        url: config.route,
-        dataType: "json",
-        success: update,
-        error: function() {
-            alert("OH NO!");
-            console.log(arguments);
-        }
+    Refresh();
+
+    if (config.refresh_interval)
+        setInterval(Refresh, config.refresh_interval);
+
+    $('.expand-all').click(function () {
+        $('.node.folder > .node-children[hidden]').attr('hidden', null);
     });
+
+    $('.expand-most').click(function () {
+        $('.disk-space-tree > .node.folder > .node-children[hidden], .disk-space-tree > .node.folder > .node-children > .node.folder > .node-children').attr('hidden', null);
+    });
+
+    $('.collapse-all').click(function () {
+        $('.node-children:not([hidden])').attr('hidden', '');
+    });
+
+    $('.refresh').click(function () {
+        Refresh();
+    });
+
 });
 
 
