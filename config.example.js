@@ -8,9 +8,9 @@ var config = {
         { title: 'Suggested for deletion (40+ days)', command: 'rm -rf', filter: function (n) { return n.age >= 86400 * 40; }, folder: '/home/die4ever/' }
     ],
     stats: function (root, config) {
-        var downloads = FindNode(tree_root, config.homedir);
+        var home = FindNode(tree_root, config.homedir);
 
-        var outside_of_home = SizeToHTML(hddusage - downloads.size);
+        var outside_of_home = SizeToHTML(hddusage - home.size);
 
         return $('<p>').text(
             '\n' + SizeToHTML(hddusage) + " used out of " + SizeToString(quota)

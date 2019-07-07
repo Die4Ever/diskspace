@@ -366,11 +366,15 @@ $(function () {
         setInterval(Refresh, config.refresh_interval);
 
     $('.expand-all').click(function () {
-        $('.node.folder > .node-children[hidden]').attr('hidden', null);
+        var c = $('.node.folder > .node-children[hidden]');
+        c.attr('hidden', null);
+        SortNodes(c);
     });
 
     $('.expand-most').click(function () {
-        $('.disk-space-tree > .node.folder > .node-children[hidden], .disk-space-tree > .node.folder > .node-children > .node.folder > .node-children').attr('hidden', null);
+        var c = $('.disk-space-tree > .node.folder > .node-children[hidden], .disk-space-tree > .node.folder > .node-children > .node.folder > .node-children');
+        c.attr('hidden', null);
+        SortNodes(c);
     });
 
     $('.collapse-all').click(function () {
