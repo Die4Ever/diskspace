@@ -210,6 +210,7 @@ function StringSort(a, b) {
 function SortNodes(node_childrens) {
     node_childrens.each(function () {
         var parent = $(this);
+        //should I have a generation counter to see if it needs sorting again? only really matters for the Expand All button...
         var nodes = parent.find('> .node');
         parent.append( nodes.sort(sort_func) );
     });
