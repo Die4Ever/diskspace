@@ -19,5 +19,6 @@ var config = {
             + '\n' + outside_of_home + ' outside of home'
             + '\n' + outside_of_downloads + ' outside of downloads'
         );
-    }
+    },
+    timeoffset: 0// the du command seems to output local time instead of universal time
 };

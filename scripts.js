@@ -17,11 +17,12 @@ class Node {
         this.fullpath = fullpath.replace(config.homedir, '~/');
         this.name = name;
         this.size = parseInt(size);
-        this.modified = parseInt(modified);
+        this.modified = parseInt(modified) - config.timeoffset;
         this.age = now - this.modified;
     }
 
-    Update() {
+    UpdateModified(modified) {
+        this.modified = parseInt(modified) - config.timeoffset;
         this.age = now - this.modified;
     }
 
@@ -71,8 +72,7 @@ function BuildFilesTree(parent, files) {
             var m = f.split('\t');
             var n = FindNode(parent, m[2]);
             n.size = parseInt(m[0]);
-            n.modified = parseInt(m[1]);
-            n.age = now - n.modified;
+            n.UpdateModified(parseInt(m[1]));
         } catch (e) { console.error(f, e); }
     }
 
