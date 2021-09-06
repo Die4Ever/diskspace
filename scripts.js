@@ -13,12 +13,17 @@ class Node {
     modified=0;
     children = {};
     age=0;
+    oldest=0;
+    youngest=0;
+
     constructor(fullpath, name, size, modified) {
         this.fullpath = fullpath.replace(config.homedir, '~/');
         this.name = name;
         this.size = parseInt(size);
         this.modified = parseInt(modified) - config.timeoffset;
         this.age = now - this.modified;
+        this.oldest = this.age;
+        this.youngest = this.age;
     }
 
     UpdateModified(modified) {
@@ -47,18 +52,35 @@ class Node {
         }
         return false;
     }
+
+    AddDescendant(child) {
+        if( child.age < this.youngest ) this.youngest = child.age;
+        if( child.age > this.oldest ) this.oldest = child.age;
+        if( this.parent ) this.parent.AddDescendant(child);
+    }
+
+    AddChild(child) {
+        this.children[child.name] = child;
+        child.parent = this;
+        this.AddDescendant(child);
+    }
+
+    NumChildren() {
+        return Object.getOwnPropertyNames(this.children).length;
+    }
 }
 
 var tree_root;
 
-function FindNode(parent, key) {
+function FindNode(parent, key, size, modified) {
     var keys = key.split('/');
     for(var i=0; i<keys.length; i++) {
         var k = keys[i];
         if(!k) { continue; }
         var n = parent.children[k];
         if(!n) {
-            n = parent.children[k] = new Node(key, k, 0, 0);
+            n = new Node(key, k, size, modified);
+            parent.AddChild(n);
         }
         parent = n;
     }
@@ -70,9 +92,12 @@ function BuildFilesTree(parent, files) {
         var f = files[i];
         try {
             var m = f.split('\t');
-            var n = FindNode(parent, m[2]);
-            n.size = parseInt(m[0]);
-            n.UpdateModified(parseInt(m[1]));
+            var name = m[2];
+            var size = parseInt(m[0]);
+            var modified = parseInt(m[1]);
+            var n = FindNode(parent, name, size, modified);
+            //n.size = parseInt(m[0]);
+            //n.UpdateModified(parseInt(m[1]));
         } catch (e) { console.error(f, e); }
     }
 
@@ -167,7 +192,12 @@ function NodeToHTML(node, depth) {
 
     var name_padding_left = (depth*1.5) +'rem';
     var size_html = SizeToHTML(node.size, '<br/>');
-    var modified_html = TimestampToHTML(node.age);
+    var modified_html = TimestampToHTML(node.youngest);
+    /*if( node.NumChildren() > 0 ) {
+        modified_html = TimestampToHTML(node.youngest);
+        modified_html += '<br/>';
+        modified_html += TimestampToHTML(node.oldest);
+    }*/
     var children='';
 
     for(var k in node.children) {
@@ -272,7 +302,7 @@ function BuildHTMLTree() {
 
 function FilterNodes(parent, filter) {
     var nodes=[];
-    var total_size=0;
+    var size=0;
     var count=0;
     var concat='';
     for(var i in parent.children) {
@@ -280,12 +310,12 @@ function FilterNodes(parent, filter) {
         var n = parent.children[i];
         if( !n.IsRoot() && filter(n) ) {
             nodes.push(n);
-            total_size += n.size;
+            size += n.size;
             count++;
             concat += n.fullpath.replace(/^([^\/]\/)/, '$1\'') + '\' ';
         }
     }
-    return { nodes: nodes, total_size: total_size, count: count, concat: concat };
+    return { nodes: nodes, size: size, count: count, concat: concat };
 }
 
 function BuildStats() {
@@ -300,7 +330,7 @@ function BuildStats() {
             var folder = FindNode(tree_root, c.folder);
             var nodes = FilterNodes(folder, c.filter);
 
-            var text = c.title + ' (' + SizeToHTML(nodes.total_size) + ' in ' + nodes.count + ' items):\n$ ' + c.command + ' ' + nodes.concat;
+            var text = c.title + ' (' + SizeToHTML(nodes.size) + ' in ' + nodes.count + ' items):\n$ ' + c.command + ' ' + nodes.concat;
             $('.suggested-commands').append($('<p>').text(text));
         } catch (e) { console.error(e); }
     }
