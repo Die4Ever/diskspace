@@ -13,8 +13,8 @@ class Node {
     modified=0;
     children = {};
     age=0;
-    oldest=0;
-    youngest=0;
+    oldest;
+    youngest;
 
     constructor(fullpath, name, size, modified) {
         this.fullpath = fullpath.replace(config.homedir, '~/');
@@ -22,8 +22,6 @@ class Node {
         this.size = parseInt(size);
         this.modified = parseInt(modified) - config.timeoffset;
         this.age = now - this.modified;
-        this.oldest = this.age;
-        this.youngest = this.age;
     }
 
     UpdateModified(modified) {
@@ -54,8 +52,11 @@ class Node {
     }
 
     AddDescendant(child) {
-        if( child.age < this.youngest ) this.youngest = child.age;
-        if( child.age > this.oldest ) this.oldest = child.age;
+        if( this.youngest === undefined || child.age < this.youngest )
+            this.youngest = child.age;
+        if( this.oldest === undefined || child.age > this.oldest )
+            this.oldest = child.age;
+
         if( this.parent ) this.parent.AddDescendant(child);
     }
 
@@ -192,7 +193,7 @@ function NodeToHTML(node, depth) {
 
     var name_padding_left = (depth*1.5) +'rem';
     var size_html = SizeToHTML(node.size, '<br/>');
-    var modified_html = TimestampToHTML(node.youngest);
+    var modified_html = TimestampToHTML(node.age);
     /*if( node.NumChildren() > 0 ) {
         modified_html = TimestampToHTML(node.youngest);
         modified_html += '<br/>';

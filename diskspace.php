@@ -1,5 +1,14 @@
 <?php
-$res = `( du -ab --time --time-style=+\%s ~/downloads/ ) | sort -k 1 -nr`;
+
+$json = file_get_contents("backend.config.json");
+$config = json_decode($json);
+$paths = '';
+
+foreach($config->{paths} as $path) {
+ $paths .= $path . ' ';
+}
+
+$res = `( du -ab --time --time-style=+\%s $paths ) | sort -k 1 -nr`;
 $hdd = `quota | tail -n1 | awk -F' +' '{ print $3 }'`;
 $now = intval(`date +%s`);
 $quota = `quota | tail -n1 | awk -F' +' '{ print $4 }'`;
@@ -12,7 +21,8 @@ $response = array(
 	"files" => $files,
 	"hddusage" => (int)$hdd*1024,
 	"quota" => (int)$quota*1024,
-	"requests" => $requests
+	"requests" => $requests,
+	"paths" => $config->{du_paths}
 );
 
 echo json_encode($response);
