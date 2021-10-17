@@ -22,7 +22,7 @@ $response = array(
 	"hddusage" => (int)$hdd*1024,
 	"quota" => (int)$quota*1024,
 	"requests" => $requests,
-	"paths" => $config->{du_paths}
+	"paths" => $config->{paths}
 );
 
 echo json_encode($response);
