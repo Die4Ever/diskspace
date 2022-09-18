@@ -347,7 +347,15 @@ function update(data) {
     }
 
     hddusage = parseInt(data.hddusage);
+    if(!hddusage) {
+        hddusage = parseInt(data.df_used);
+    }
+
     quota = parseInt(data.quota);
+    if(!quota) {
+        quota = parseInt(data.df_used) + parseInt(data.df_avail);
+    }
+    
     now = parseInt(data.now);
 
     BuildFilesTree(tree_root, data.files);

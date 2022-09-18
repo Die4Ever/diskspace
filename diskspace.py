@@ -43,8 +43,8 @@ try:
 except:
 	quota = 0
 
-df_used = int(cmd("df "+paths+" | tail -n1 | awk -F' +' '{ print $3 }'"))
-df_avail = int(cmd("df "+paths+" | tail -n1 | awk -F' +' '{ print $4 }'"))
+df_used = int(cmd("df -B1 "+paths+" | tail -n1 | awk -F' +' '{ print $3 }'"))
+df_avail = int(cmd("df -B1 "+paths+" | tail -n1 | awk -F' +' '{ print $4 }'"))
 
 output = {
 	"now": now, "files": files, "quota": quota, "hddusage": hdd, "paths": config['paths'], "df_used": df_used, "df_avail": df_avail
