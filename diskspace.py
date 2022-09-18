@@ -18,17 +18,35 @@ paths = ''
 for path in config['paths']:
 	paths += path + ' '
 
+def cmd(s, default=""):
+	try:
+		pipe = subprocess.run(s, check=True, timeout=300, shell=True, stdout=subprocess.PIPE)
+		out = pipe.stdout.decode("utf-8")
+	except Exception as e:
+		print(e, file=sys.stderr)
+		return default
+	return out
+
 now = int(datetime.now().timestamp())
-du = subprocess.Popen("( du -ab --time --time-style=+\%s "+paths+" ) | sort -k 1 -nr", shell=True, stdout=subprocess.PIPE)
-diskspace = du.stdout.read().decode("utf-8")
+diskspace = cmd("( du -ab --time --time-style=+\%s "+paths+" ) | sort -k 1 -nr")
 files = diskspace.splitlines()
 
-hdd = subprocess.Popen("quota | tail -n1 | awk -F' +' '{ print $3 }'", shell=True, stdout=subprocess.PIPE)
-hdd = hdd.stdout.read().decode("utf-8")
-hdd = int(hdd)*1024
-quota = subprocess.Popen("quota | tail -n1 | awk -F' +' '{ print $4 }'", shell=True, stdout=subprocess.PIPE)
-quota = quota.stdout.read().decode("utf-8")
-quota = int(quota)*1024
+hdd = cmd("quota | tail -n1 | awk -F' +' '{ print $3 }'", "0")
+try:
+	hdd = int(hdd)*1024
+except:
+	hdd = 0
 
-output = { "now": now, "files": files, "quota": quota, "hddusage": hdd, "paths": config['paths'] }
+quota = cmd("quota | tail -n1 | awk -F' +' '{ print $4 }'", "0")
+try:
+	quota = int(quota)*1024
+except:
+	quota = 0
+
+df_used = int(cmd("df "+paths+" | tail -n1 | awk -F' +' '{ print $3 }'"))
+df_avail = int(cmd("df "+paths+" | tail -n1 | awk -F' +' '{ print $4 }'"))
+
+output = {
+	"now": now, "files": files, "quota": quota, "hddusage": hdd, "paths": config['paths'], "df_used": df_used, "df_avail": df_avail
+}
 print( json.dumps(output) )
