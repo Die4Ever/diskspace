@@ -15,8 +15,8 @@ $quota = `quota | tail -n1 | awk -F' +' '{ print $4 }'`;
 $files = preg_split("/((\r?\n)|(\r\n?))/", $res);
 $res = '';
 $requests = preg_split("/((\r?\n)|(\r\n?))/", $res);
-$df_used = `df -B1 $paths | tail -n1 | awk -F' +' '{ print $3 }'`;
-$df_avail = `df -B1 $paths | tail -n1 | awk -F' +' '{ print $4 }'`;
+$df_used = `df -B1 --output=used $paths | tail -n1`;
+$df_avail = `df -B1 --output=avail $paths | tail -n1`;
 
 $response = array(
 	"now" => (int)$now,
